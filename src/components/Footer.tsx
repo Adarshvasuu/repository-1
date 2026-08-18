@@ -1,13 +1,12 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { GithubLogo, LinkedinLogo, TwitterLogo, Envelope, Copyright, Heart } from "@phosphor-icons/react"
+import { GithubLogo, LinkedinLogo, Envelope, Copyright, Heart } from "@phosphor-icons/react"
 import { socialLinks } from "@/lib/data"
 
 const iconMap = {
   GithubLogo,
   LinkedinLogo,
-  TwitterLogo,
   Envelope,
 } as const
 

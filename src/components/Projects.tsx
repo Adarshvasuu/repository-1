@@ -4,10 +4,17 @@ import { cn } from "@/lib/utils"
 import { RevealOnScroll, StaggerReveal } from "@/components/RevealOnScroll"
 import { projects } from "@/lib/data"
 import { GithubLogo, ArrowSquareOut, Star, Tag, Calendar, Clock, Link } from "@phosphor-icons/react"
+import { motion, useScroll, useTransform } from "motion/react"
+import { useRef, useState } from "react"
 
 export function Projects() {
   const featuredProjects = projects.filter((p) => p.featured)
   const otherProjects = projects.filter((p) => !p.featured)
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+
+  // Parallax scroll for featured cards
+  const { scrollY } = useScroll()
+  const yTransform = useTransform(scrollY, [0, 500], [0, -50])
 
   return (
     <section id="projects" className="section relative" aria-labelledby="projects-title">
@@ -26,8 +33,8 @@ export function Projects() {
               </h2>
             </div>
             <p className="text-ink-soft max-w-md text-base md:text-lg leading-relaxed">
-              A curated collection of production systems, open-source tools,
-              and research prototypes. Each solves a real problem.
+              A curated collection of projects, open-source tools,
+              and learning experiments. Each solves a real problem.
             </p>
           </div>
         </RevealOnScroll>
@@ -41,7 +48,7 @@ export function Projects() {
             <StaggerReveal stagger={150} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {featuredProjects.map((project, index) => (
                 <RevealOnScroll key={project.id} delay={index * 150}>
-                  <FeaturedProjectCard project={project} />
+                  <FeaturedProjectCard project={project} onHover={setHoveredCard} isHovered={hoveredCard === project.id} />
                 </RevealOnScroll>
               ))}
             </StaggerReveal>
@@ -57,7 +64,7 @@ export function Projects() {
             <StaggerReveal stagger={100} className="grid gap-4 md:grid-cols-2">
               {otherProjects.map((project, index) => (
                 <RevealOnScroll key={project.id} delay={index * 100}>
-                  <CompactProjectCard project={project} />
+                  <CompactProjectCard project={project} onHover={setHoveredCard} isHovered={hoveredCard === project.id} />
                 </RevealOnScroll>
               ))}
             </StaggerReveal>
@@ -84,18 +91,31 @@ export function Projects() {
 
 interface FeaturedProjectCardProps {
   project: typeof projects[0]
+  onHover: (id: string | null) => void
+  isHovered: boolean
 }
 
-function FeaturedProjectCard({ project }: FeaturedProjectCardProps) {
+function FeaturedProjectCard({ project, onHover, isHovered }: FeaturedProjectCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
   return (
-    <article className="glass-card relative overflow-hidden group h-full flex flex-col">
+    <motion.article
+      ref={cardRef}
+      className="glass-card relative overflow-hidden group h-full flex flex-col"
+      style={{ minHeight: "480px" }}
+      onMouseEnter={() => onHover(project.id)}
+      onMouseLeave={() => onHover(null)}
+      whileHover={{ y: -8, boxShadow: "0 30px 60px -15px rgb(168 85 247 / 0.3)" }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    >
       {/* Image */}
-      <div className="relative aspect-video overflow-hidden">
-        <img
+      <motion.div className="relative aspect-video overflow-hidden">
+        <motion.img
           src={project.image}
           alt=""
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 ease-out"
           loading="lazy"
+          style={{ transform: isHovered ? "scale(1.08)" : "scale(1)" }}
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-transparent to-transparent z-10" aria-hidden="true" />
@@ -107,7 +127,10 @@ function FeaturedProjectCard({ project }: FeaturedProjectCardProps) {
           </span>
         </div>
         {/* Links overlay */}
-        <div className="absolute bottom-4 left-4 right-4 z-20 flex gap-2 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        <motion.div
+          className="absolute bottom-4 left-4 right-4 z-20 flex gap-2 translate-y-4 opacity-0 transition-all duration-300"
+          animate={{ translateY: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
+        >
           {project.liveUrl && (
             <a
               href={project.liveUrl}
@@ -130,8 +153,8 @@ function FeaturedProjectCard({ project }: FeaturedProjectCardProps) {
               Code
             </a>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Content */}
       <div className="p-6 flex-1 flex flex-col">
@@ -155,10 +178,16 @@ function FeaturedProjectCard({ project }: FeaturedProjectCardProps) {
         {/* Highlights */}
         <ul className="space-y-2 mb-6" role="list">
           {project.highlights.slice(0, 3).map((highlight, i) => (
-            <li key={i} className="flex gap-2 text-sm text-ink-soft">
+            <motion.li
+              key={i}
+              className="flex gap-2 text-sm text-ink-soft"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+            >
               <Tag weight="bold" size={14} color="var(--color-accent)" aria-hidden="true" className="flex-shrink-0 mt-0.5" />
               <span>{highlight}</span>
-            </li>
+            </motion.li>
           ))}
         </ul>
 
@@ -174,17 +203,26 @@ function FeaturedProjectCard({ project }: FeaturedProjectCardProps) {
           </span>
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }
 
 interface CompactProjectCardProps {
   project: typeof projects[0]
+  onHover: (id: string | null) => void
+  isHovered: boolean
 }
 
-function CompactProjectCard({ project }: CompactProjectCardProps) {
+function CompactProjectCard({ project, onHover, isHovered }: CompactProjectCardProps) {
   return (
-    <article className="glass-card p-5 relative overflow-hidden group flex flex-col" style={{ minHeight: "280px" }}>
+    <motion.article
+      className="glass-card p-5 relative overflow-hidden group flex flex-col"
+      style={{ minHeight: "280px" }}
+      onMouseEnter={() => onHover(project.id)}
+      onMouseLeave={() => onHover(null)}
+      whileHover={{ y: -4, boxShadow: "0 20px 40px -10px rgb(168 85 247 / 0.2)" }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap gap-1.5 mb-3">
@@ -226,10 +264,16 @@ function CompactProjectCard({ project }: CompactProjectCardProps) {
 
       <div className="flex flex-wrap gap-1.5">
         {project.highlights.slice(0, 2).map((highlight, i) => (
-          <span key={i} className="text-xs text-ink-muted font-mono flex items-center gap-1">
+          <motion.span
+            key={i}
+            className="text-xs text-ink-muted font-mono flex items-center gap-1"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: i * 0.1 }}
+          >
             <Tag weight="bold" size={10} color="var(--color-accent)" aria-hidden="true" />
             {highlight.length > 45 ? highlight.slice(0, 45) + "..." : highlight}
-          </span>
+          </motion.span>
         ))}
       </div>
 
@@ -237,6 +281,6 @@ function CompactProjectCard({ project }: CompactProjectCardProps) {
         <span>{project.duration}</span>
         <span>{project.role}</span>
       </div>
-    </article>
+    </motion.article>
   )
 }

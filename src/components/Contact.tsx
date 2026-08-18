@@ -3,14 +3,14 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { RevealOnScroll } from "@/components/RevealOnScroll"
-import { Envelope, LinkedinLogo, GithubLogo, TwitterLogo, PaperPlane, MapPin, Clock, Check, Warning } from "@phosphor-icons/react"
+import { Envelope, LinkedinLogo, GithubLogo, PaperPlane, MapPin, Clock, Check, Warning } from "@phosphor-icons/react"
+import { socialLinks } from "@/lib/data"
 
-const socialLinks = [
-  { label: "GitHub", href: "https://github.com/Adarshvasuu", icon: GithubLogo, color: "var(--color-ink)" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/adarsh-vasu", icon: LinkedinLogo, color: "#0a66c2" },
-  { label: "Twitter", href: "https://twitter.com/adarshvasu", icon: TwitterLogo, color: "#1da1f2" },
-  { label: "Email", href: "mailto:adarsh.vasu@email.com", icon: Envelope, color: "var(--color-accent)" },
-] as const
+const iconMap = {
+  GithubLogo,
+  LinkedinLogo,
+  Envelope,
+} as const
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -86,7 +86,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className="text-xs font-mono text-ink-muted uppercase tracking-wider">LinkedIn</p>
-                    <p className="font-medium text-ink group-hover:text-accent-glow transition-colors duration-200">linkedin.com/in/adarsh-vasu</p>
+                    <p className="font-medium text-ink group-hover:text-accent-glow transition-colors duration-200">linkedin.com/in/adarsh-s-060961392</p>
                   </div>
                 </a>
 
@@ -114,7 +114,7 @@ export function Contact() {
               {/* Social links */}
               <div className="flex flex-wrap gap-3">
                 {socialLinks.map((social) => {
-                  const Icon = social.icon
+                  const Icon = iconMap[social.icon as keyof typeof iconMap]
                   return (
                     <a
                       key={social.label}
