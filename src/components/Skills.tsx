@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { cn } from "@/lib/utils"
+import { cn, createAnchorHref } from "@/lib/utils"
 import { RevealOnScroll, StaggerReveal } from "@/components/RevealOnScroll"
 import { skills } from "@/lib/data"
 import { Code, Database, Wrench, Brain, Users, Lightning } from "@phosphor-icons/react"
@@ -151,11 +151,11 @@ export function Skills() {
         <RevealOnScroll delay={200} className="mt-16 text-center">
           <p className="text-ink-soft mb-6">Want to see these skills in action?</p>
           <a
-            href="#contact"
+            href={createAnchorHref("contact")}
             className="btn-magnetic btn-primary inline-flex items-center gap-2"
             onClick={(e) => {
               e.preventDefault()
-              document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
+              document.querySelector(createAnchorHref("contact"))?.scrollIntoView({ behavior: "smooth" })
             }}
           >
             <Database weight="bold" size={18} aria-hidden="true" />

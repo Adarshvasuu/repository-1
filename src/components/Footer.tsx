@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn, createAnchorHref } from "@/lib/utils"
 import { GithubLogo, LinkedinLogo, Envelope, Copyright, Heart } from "@phosphor-icons/react"
 import { socialLinks } from "@/lib/data"
 
@@ -36,10 +36,10 @@ export function Footer() {
 
           {/* Middle - Navigation */}
           <nav className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6" aria-label="Footer navigation">
-            <a href="#experience" className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Experience</a>
-            <a href="#projects" className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Projects</a>
-            <a href="#skills" className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Skills</a>
-            <a href="#contact" className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Contact</a>
+            <a href={createAnchorHref("experience")} className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Experience</a>
+            <a href={createAnchorHref("projects")} className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Projects</a>
+            <a href={createAnchorHref("skills")} className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Skills</a>
+            <a href={createAnchorHref("contact")} className="text-sm text-ink-muted hover:text-ink transition-colors duration-200">Contact</a>
           </nav>
 
           {/* Right - Social */}

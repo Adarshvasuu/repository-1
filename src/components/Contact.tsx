@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { RevealOnScroll } from "@/components/RevealOnScroll"
 import { Envelope, LinkedinLogo, GithubLogo, PaperPlane, MapPin, Clock, Check, Warning } from "@phosphor-icons/react"
 import { socialLinks } from "@/lib/data"
+import { createAnchorHref } from "@/lib/utils"
 
 const iconMap = {
   GithubLogo,

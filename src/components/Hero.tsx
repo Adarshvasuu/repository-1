@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion } from "motion/react"
-import { cn } from "@/lib/utils"
+import { cn, createAnchorHref } from "@/lib/utils"
 import { Code, Sparkle, ArrowRight, Terminal, MagicWand } from "@phosphor-icons/react"
 import { siteConfig } from "@/lib/data"
 
@@ -147,11 +147,11 @@ export function Hero() {
               className="mt-10 flex flex-wrap items-center gap-4"
             >
               <a
-                href="#projects"
+                href={createAnchorHref("projects")}
                 className="btn-magnetic btn-primary group"
                 onClick={(e) => {
                   e.preventDefault()
-                  document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })
+                  document.querySelector(createAnchorHref("projects"))?.scrollIntoView({ behavior: "smooth" })
                 }}
               >
                 <Code weight="bold" size={18} aria-hidden="true" />
@@ -161,11 +161,11 @@ export function Hero() {
                 </span>
               </a>
               <a
-                href="#contact"
+                href={createAnchorHref("contact")}
                 className="btn-magnetic btn-ghost group"
                 onClick={(e) => {
                   e.preventDefault()
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
+                  document.querySelector(createAnchorHref("contact"))?.scrollIntoView({ behavior: "smooth" })
                 }}
               >
                 <Sparkle weight="bold" size={18} aria-hidden="true" />

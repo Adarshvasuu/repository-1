@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { cn, createAnchorHref } from "@/lib/utils"
 import { CubeFocus } from "@phosphor-icons/react"
 import { Moon, Sun, Menu, X } from "lucide-react"
 
 const navItems = [
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#skills", label: "Skills" },
-  { href: "#contact", label: "Contact" },
+  { section: "experience", label: "Experience" },
+  { section: "projects", label: "Projects" },
+  { section: "skills", label: "Skills" },
+  { section: "contact", label: "Contact" },
 ]
 
 export function Navigation() {
@@ -40,7 +40,8 @@ export function Navigation() {
     document.documentElement.classList.toggle("light", newTheme === "light")
   }
 
-  const scrollTo = (href: string) => {
+  const scrollTo = (section: string) => {
+    const href = createAnchorHref(section)
     const element = document.querySelector(href)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
@@ -60,7 +61,7 @@ export function Navigation() {
       aria-label="Main navigation"
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
-        <a href="#top" className="flex items-center gap-2" aria-label="Home">
+        <a href={createAnchorHref("top")} className="flex items-center gap-2" aria-label="Home">
           <CubeFocus
             weight="bold"
             size={28}
@@ -73,11 +74,11 @@ export function Navigation() {
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
             <a
-              key={item.href}
-              href={item.href}
+              key={item.section}
+              href={createAnchorHref(item.section)}
               onClick={(e) => {
                 e.preventDefault()
-                scrollTo(item.href)
+                scrollTo(item.section)
               }}
               className="text-sm font-medium text-ink-soft hover:text-ink transition-colors duration-200 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full"
             >
@@ -121,11 +122,11 @@ export function Navigation() {
           <div className="container flex flex-col gap-4">
             {navItems.map((item) => (
               <a
-                key={item.href}
-                href={item.href}
+                key={item.section}
+                href={createAnchorHref(item.section)}
                 onClick={(e) => {
                   e.preventDefault()
-                  scrollTo(item.href)
+                  scrollTo(item.section)
                 }}
                 className="text-lg font-medium text-ink-soft hover:text-ink transition-colors duration-200 px-2 py-2"
               >
